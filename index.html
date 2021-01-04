@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <title>Hello, world!</title>
+  <style>
+    .ring-outline {
+      border : 1px solid #000000;
+      text-align: center;
+    }
+
+    .div_container {
+      margin-top: 0px;
+    }
+
+    .card-body {
+      /*background-color: #000000;*/
+    }
+
+    .circle {
+      background-color: #000000;
+      border-radius: 50%;
+    }
+
+    .caliberator_circle {
+      /*background-color: #000000;*/
+      border-radius: 50%;
+      border: 1px solid #000000;
+    }
+
+    .reducer, .increaser {
+      cursor: pointer;
+    }
+
+    .no-margin {
+      margin: 0px !important;
+    }
+
+    .no-padding {
+      padding: 0px !important;
+    }
+
+    #result {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body id="body">
+
+<div class="row">
+  <div class="col-md-8 offset-2 divCalibrator">
+    <div class="card no-margin no-padding">
+      <div class="card-header">
+        <h4>Calibrator</h4>
+        <p class="card-category">Place the actual coin on the cin image and calibrate the screen to make sure both coins become same size and click "Set Screen Size"</p>
+        <p class="card-category">or Add the actual diagonal value screen</p>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-sm-6 text-center">
+                <label for="rangePicker">Select the Coin</label>
+                <div class="input-group mb-3">
+                  <select class="form-control" id="actualCoinSelector">
+                    <option value="18">Coin 1</option>
+                    <option value="21">Coin 2</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-6 text-center">
+                <label for="rangePicker">Coin Size</label>
+                <div class="input-group mb-3">
+                  <input class="form-control" type="text" id="actualCoinSize">
+                  <div class="input-group-append">
+                    <span class="input-group-text">mm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <img src="" class="caliberator_circle" id="caliberator_circle">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-sm btn-info" onclick="reduceCalibratorValue()">-</button>
+                  </div>
+                  <input type="range" id="rangePickerCaliberator" step="0.02" min="1" max="100" class="form-control">
+                  <div class="input-group-append">
+                    <button class="btn btn-sm btn-info" onclick="increaseCalibratorValue()">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-6 text-center">
+                    <div class="input-group mb-3">
+                      <input type="text" id="calibratorValueText" class="form-control" disabled>
+                      <div class="input-group-append">
+                        <span class="input-group-text">mm</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 text-center">
+                    <button class="btn btn-sm btn-success" onclick="setMMSize()" style="margin-top: 5px;">Calibrate Coins size</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-sm-2"></div>
+
+          <div class="col-sm-4 text-center">
+            <div class="row">
+              <div class="col-sm-12">
+                <label for="rangePicker">Screen Diagonal</label>
+                <div class="input-group mb-3">
+                  <input type="text" id="screenWidth" class="form-control" placeholder='Eg:- 15.6"'>
+                  <div class="input-group-append">
+                    <span class="input-group-text increaser" >Px</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8 offset-2">
+    <div class="row div_container">
+      <div class="col-sm-12">
+        <div class="card no-margin no-padding ringSizerCard">
+          <div class="card-header">
+            <h4>Ring Size Calculator</h4>
+          </div>
+          <div class="card-body no-margin no-padding" >
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="ring-outline" id="ring-outline">
+                  <div class="circle" id="circle"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" >
+              <div class="col-sm-12" style="margin-top: 10px">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button class="btn btn-sm btn-info" onclick="reduceValue()">-</button>
+                      </div>
+                      <input type="range" id="rangePicker" step="1" class="form-control">
+                      <div class="input-group-append">
+                        <button class="btn btn-sm btn-info" onclick="increaseValue()">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12"  style="margin-top: 10px">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label for="rangePicker">Ring Width in Pixel</label>
+                    <div class="input-group mb-3">
+                      <input type="text" id="rangeValueInPX" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text increaser" >Px</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <label for="rangePicker">Ring Width in mm</label>
+                    <div class="input-group mb-3">
+                      <input type="text" id="rangeValueInMM" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text increaser" >mm</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" >
+              <div class="col-md-12" id="result" >
+                <label>circumference of the Cycle (mm) = <span id="resultValue"></span></label>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 50px">
+              <div class="col-sm-12 text-center">
+                <button class="btn btn-sm btn-info" onclick="showScreenCalibrator()"> Calibrate Again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div class="container" width="100%">-->
+
+<!--</div>-->
+
+
+<table id="rulartableH" style="margin-top: 15px">
+  <tbody id="rulartableHBody">
+  <tr id="rulartableHTR"></tr>
+  </tbody>
+</table>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
+<script>
+  var screenWidth = 0;
+  var screenHeight = 0;
+  var diagonalInPixel = 0;
+  var one_mm_in_px = 0;
+  var defaultHeight = 0;
+  var valueOfPi = 3.14;
+
+  var coins = [
+    {id: 0, text: 'Coin 1/2 ILS', value: 26, imageUrl: '/coin1_new.png'},
+    {id: 1, text: 'Coin 5 ILS', value: 24, imageUrl: '/coin2_new.png'},
+    {id: 2, text: 'Coin 10 ILS', value: 23, imageUrl: '/coin3_new.png'},
+  ]
+
+
+  $(document).ready(()=> {
+
+    // for calibrator
+    $('#actualCoinSelector').on('change', function(){
+      $('#actualCoinSize').val(coins[this.value].value);
+      console.log(coins[this.value].imageUrl);
+      $('#caliberator_circle').attr('src', './'+coins[this.value].imageUrl);
+
+    });
+    addDefaultValueToSelect();
+
+    $('.div_container').hide();
+    screenWidth = window.outerWidth;
+    screenHeight = window.outerHeight;
+    diagonalInPixel = Math.sqrt((screenWidth * screenWidth) + (screenHeight * screenHeight));
+
+    // getUserInput();
+
+    setWindowSize();
+
+    // to ge the input from "Coin Size" input
+    $('#actualCoinSize').on('change', function() {
+      var tempActualCoinVal = $('#actualCoinSelector').val();
+      if (tempActualCoinVal) {
+        coins[Number(tempActualCoinVal)].value = this.value;
+      }
+    });
+
+    // to ge the input from the calibrator side range picker
+    $('#rangePickerCaliberator').on('change', function() {
+      $('#caliberator_circle').width(this.value + 'mm');
+      $('#caliberator_circle').height(this.value + 'mm');
+      $('#calibratorValueText').val(this.value);
+    });
+
+    // to get the screen diagonal input
+    $('#screenWidth').on('change', function(e) {
+      // 1inch = 25.4mm
+      $('.div_container').show();
+      $('.divCalibrator').hide();
+
+      var screenDiagonalInMM = this.value * 25.4;
+      one_mm_in_px = diagonalInPixel / screenDiagonalInMM;
+      defaultHeight = one_mm_in_px * 10;
+
+      $('#ring-outline').height(defaultHeight);
+      $('#ring-outline').width($('.ringSizerCard').width());
+      $('#rangePicker').val(defaultHeight);
+
+      $('#rangeValueInPX').val(defaultHeight);
+      $('#rangeValueInMM').val(10);
+
+      setCircle();
+    });
+
+    // to ge the value from ring sizer range picker
+    $('#rangePicker').on('change', function(e){
+      if (one_mm_in_px > 0) {
+        $('#ring-outline').height(this.value);
+        $('#ring-outline').width($('.ringSizerCard').width());
+
+        $('#rangeValueInPX').val(this.value);
+        $('#rangeValueInMM').val(this.value / one_mm_in_px);
+        setCircle();
+      } else {
+        // getUserInput();
+      }
+
+    });
+
+    // to get the value from "Ring width in mm" input
+    $('#rangeValueInMM').on('change', function(e){
+      if (one_mm_in_px > 0) {
+        $('#rangePicker').val(this.value * one_mm_in_px);
+        $('#ring-outline').height(this.value * one_mm_in_px);
+        $('#ring-outline').width($('.ringSizerCard').width());
+        $('#rangeValueInPX').val(this.value * one_mm_in_px);
+        setCircle();
+      } else {
+        // getUserInput();
+      }
+
+    });
+
+    // to get the value from "Ring width in px" input
+    $('#rangeValueInPX').on('change', function(e){
+      if (one_mm_in_px > 0) {
+        $('#rangePicker').val(this.value);
+        $('#ring-outline').height(this.value);
+        $('#ring-outline').width($('.ringSizerCard').width());
+        $('#rangeValueInMM').val(this.value / one_mm_in_px);
+        setCircle();
+      } else {
+        // getUserInput();
+      }
+
+    });
+
+  });
+
+  // set default value at the start of the project of in the restart option
+  function initValues() {
+    $('#actualCoinSelector').val(0);
+    $('#actualCoinSize').val(coins[0].value);
+    $('#rangePickerCaliberator').val(coins[0].value);
+    $('#caliberator_circle').attr('src', './'+coins[0].imageUrl);
+    $('#calibratorValueText').val($('#rangePickerCaliberator').val());
+    $('#caliberator_circle').width($('#rangePickerCaliberator').val() + 'mm');
+    $('#caliberator_circle').height($('#rangePickerCaliberator').val() + 'mm');
+  }
+
+  // to add options list to "Select the coin" dropdown.
+  function addDefaultValueToSelect() {
+    $('#actualCoinSelector').children('option').remove();
+
+    for (var coin_i = 0; coin_i < coins.length; coin_i++) {
+      var tempCoin = coins[coin_i];
+      $('#actualCoinSelector').append('<option value="'+tempCoin.id+'">'+tempCoin.text+'</option>');
+    }
+
+    initValues()
+  }
+
+  // to reduce the value of calibrator
+  function reduceCalibratorValue() {
+    var tempCalibratorValue = Number($('#rangePickerCaliberator').val());
+
+    if (tempCalibratorValue) {
+      $('#rangePickerCaliberator').val(tempCalibratorValue - 0.02);
+      $('#caliberator_circle').width(tempCalibratorValue + 'mm');
+      $('#caliberator_circle').height(tempCalibratorValue + 'mm');
+      $('#calibratorValueText').val(tempCalibratorValue);
+    } else {
+      $('#rangePickerCaliberator').val(100);
+      $('#calibratorValueText').val(100);
+    }
+  }
+
+  // to increase the value of calibrator
+  function increaseCalibratorValue() {
+    var tempCalibratorValue = Number($('#rangePickerCaliberator').val());
+
+    if (tempCalibratorValue) {
+      $('#rangePickerCaliberator').val(tempCalibratorValue + 0.02);
+      $('#caliberator_circle').width(tempCalibratorValue + 'mm');
+      $('#caliberator_circle').height(tempCalibratorValue + 'mm');
+      $('#calibratorValueText').val(tempCalibratorValue);
+    } else {
+      $('#rangePickerCaliberator').val(1);
+      $('#calibratorValueText').val(1);
+    }
+  }
+
+  // to set the screen exact mm value when click the "Calibrate coins size" button
+  function setMMSize() {
+    $('.div_container').show();
+    $('.divCalibrator').hide();
+
+    var tempCalibratorCircleValInPx = $('#caliberator_circle').width();
+    var tempSelectedValueInMM = $('#actualCoinSize').val();
+    if ((Number(tempCalibratorCircleValInPx) > 0) && (Number(tempSelectedValueInMM) > 0)) {
+      one_mm_in_px = tempCalibratorCircleValInPx / tempSelectedValueInMM;
+
+      defaultHeight = one_mm_in_px * 10;
+
+      $('#ring-outline').height(defaultHeight);
+      $('#ring-outline').width($('.ringSizerCard').width());
+
+      $('#rangePicker').val(defaultHeight);
+      $('#rangeValueInPX').val(defaultHeight);
+      $('#rangeValueInMM').val(10);
+
+      setCircle();
+    }
+  }
+
+  // to get eh screen diagonal value from the user
+  function getUserInput() {
+    var userInput = prompt("Enter Screen diagonal of the display Eg:- 15.6\"", '15.6');
+
+    if (userInput != null) {
+      $('#screenWidth').val(userInput);
+      var screenDiagonalInMM = userInput * 25.4;
+      one_mm_in_px = diagonalInPixel / screenDiagonalInMM;
+      defaultHeight = one_mm_in_px * 10;
+
+      $('#ring-outline').height(defaultHeight);
+      $('#ring-outline').width($('.ringSizerCard').width());
+
+      $('#rangePicker').val(defaultHeight);
+      $('#rangeValueInPX').val(defaultHeight);
+      $('#rangeValueInMM').val(10);
+      setCircle();
+    }
+  }
+
+  // set the default width of the ring sizer block
+  function setWindowSize() {
+    $('#ring-outline').width($('.ringSizerCard').width());
+    $('#rangePicker').attr('max', screenWidth);
+    setCircle();
+  }
+
+  // to increase the value of the ring sizer
+  function increaseValue() {
+    if (one_mm_in_px > 0) {
+      var tempHeight = $('#ring-outline').height();
+      $('#ring-outline').height(tempHeight + 1);
+
+      $('#rangePicker').val($('#ring-outline').height());
+      $('#rangeValueInPX').val($('#ring-outline').height());
+      $('#rangeValueInMM').val($('#ring-outline').height() / one_mm_in_px);
+      setCircle();
+    } else {
+      // getUserInput();
+    }
+
+  }
+
+  // to reduce the value of the ring sizer
+  function reduceValue() {
+    if (one_mm_in_px > 0) {
+      var tempHeight = $('#ring-outline').height();
+      $('#ring-outline').height(tempHeight-1);
+      $('#rangePicker').val($('#ring-outline').height());
+      $('#rangeValueInPX').val($('#ring-outline').height());
+      $('#rangeValueInMM').val($('#ring-outline').height() / one_mm_in_px);
+      setCircle();
+    } else {
+      // getUserInput();
+    }
+
+  }
+
+  // to draw the ring sizer circle using selected values
+  function setCircle() {
+    var tempHeight = $('#rangeValueInPX').val();
+    $('#circle').width(tempHeight);
+    $('#circle').height(tempHeight);
+    $('#circle').css({'margin-left':(($('#ring-outline').width()/2) - (tempHeight/2))});
+
+    var rediusOfCircle = (tempHeight/one_mm_in_px) / 2;
+    var result = (2 * valueOfPi* rediusOfCircle);
+
+    if ((result > 0) && (one_mm_in_px > 0)) {
+      $('#resultValue').text((2 * valueOfPi* rediusOfCircle).toFixed(2));
+    } else {
+      $('#resultValue').text(0);
+    }
+
+    drawTable();
+  }
+
+
+  // to draw the btoom table
+  function drawTable() {
+
+    if (one_mm_in_px > 0) {
+      var widthOfInnerColumn = one_mm_in_px * 10;
+
+      $('#rulartableH').css({'width': 'auto', 'margin-left': (30)});
+      $('#rulartableHTR').children('td').remove();
+
+      for (let i = 1; i < Math.floor(screenWidth/widthOfInnerColumn); i++) {
+        $('#rulartableHTR').append('<td style="width: '+widthOfInnerColumn+'px; border-right: 1px solid #000000;border-left: 1px solid #000000; height: 20px;">'+i+'</td>');
+
+      }
+
+    }
+
+  }
+
+  function showScreenCalibrator() {
+    $('.div_container').hide();
+    $('.divCalibrator').show();
+  }
+
+</script>
